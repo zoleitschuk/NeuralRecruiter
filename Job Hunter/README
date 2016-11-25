@@ -1,0 +1,367 @@
+*************************************************************************
+*																		*
+*						Application: Job Hunter							*
+*							Version: 1.0								*
+*					  Last Updated: 20-Sept-2016						*
+*																		*
+*					  Author: Zachary Oleitschuk						*
+*																		*
+*************************************************************************
+=========================================================================
+Table of Contents:
+-------------------------------------------------------------------------
+1.	About Job Hunter
+2.	Setting Up your Computer to Run Job Hunter
+3.	Using Job Hunter
+4.	Potential Improvements to Job Hunter
+5.	Credits
+6.	Contact
+
+=========================================================================
+1.	About Job Hunter:
+-------------------------------------------------------------------------
+Job Hunter is an application designed to help individuals streamline
+their job search. The application takes a set of job descriptions that a
+user has rated on a scale of 1-5 for two different categories:
+
+	i.	how interesting they feel the job described is, and
+	ii.	how well they meet the requirements for the job itself.
+
+The job descriptions and both of their ratings are then used to
+train a machine learning algorithm. Once the algorithm is trained, the
+program is then able to automatically rate jobs for both categories
+without user input. The application then generates a scatter plot of the
+results. Each dot represents a job description. Dots that are higher on
+the y-axis represents jobs that the user would likely find more interesting
+or fulfilling than dots that are located lower on the y-axis. Likewise,
+dots that are further right on the x-axis are ones that the user would
+likely be more qualified to perform than those that are located further to
+the left on the x-axis. Therefore, users not only save time by not having
+to read through hundreds of job descriptions, but can focus their
+efforts on “high success” jobs by selecting jobs in the top right portion
+of the chart. These jobs represent "high success" jobs where the user is
+passionate about the activities involved with the job, and qualified to
+perform those activities.
+
+Additionally, each dot is also colored according to what company the job
+description belongs to. This coloring allows a user to visually identify
+certain companies that would be better make a better/worse fit over others.
+
+For example: say that the majority of dots for a particular company are
+very low on the y-axis. This company is likely not the best fit for that
+individual as the bulk of the work that that company is looking to perform
+does not appear interesting or fulfilling to that individual. WARNING: this
+type of analysis is only valid if the job description library has an
+accurate representation of jobs at that company, and the machine learning
+algorithm is trained properly.
+
+Motivation behind this App:
+I originally wrote this application to help me with my own job search,
+and to serve as a portfolio project to aid in landing my dream job once
+I found it. I found while I was able to identify positions easily
+using manual means, that purely manual methods had some significant
+downsides:
+	a.	Job Search Depression - after hours of sifting through job
+		descriptions (most of which were not a good fit) I would feel
+		completely uninspired by the prospect of ever finding a dream job.
+	b.	Wasted Time - I was spending hours reading job descriptions that 
+		were not valid prospects.
+	c.	No Overall Context - Even after isolating a set of jobs that I was
+		interested in and qualified for, there was no overarching context
+		to how that position fit into the company. In order to get this
+		more reading and research was required. Meaning most likely more
+		wasted time, and likely more dead ends.
+
+As a result, I decided the best way to avoid these downsides was to write a
+computer program to speed up the process, and visually display the results
+for interpretation. The final result is this application. I hope you find
+it useful as well.
+
+=========================================================================
+2.	Setting Up your Computer to Run Job Hunter:
+-------------------------------------------------------------------------
+The following section provides a description of the requirements to run
+Job Hunter on your computer as well as a step by step guide on setting
+up Job Hunter to run.
+
+Requirements:
+1.	GNU Octave
+2.	JSONlab
+3.	Python 3
+4.	pandas *^
+5.	numpy *^
+6.	sqlalchemy *^
+7.	bokeh *^
+8.	beautifulsoup4 *^
+9.	oct2py *
+
+* python libraries
+^ python libraries included in installation of Anaconda (see Set-up 2.)
+
+Set-up:
+1.	Copy the entire Job Hunter folder including files and sub-folders to
+	any location on your computer with read and write permissions.
+	
+2.	Download and install GNU Octave. You can download GNU Octave from:
+	https://www.gnu.org/software/octave/download.html
+	To install simply follow the installation wizard.
+	
+3.	Download JSONlab from:
+	https://www.mathworks.com/matlabcentral/fileexchange/33381-jsonlab--a-toolbox-to-encode-decode-json-files
+	and add folder (make sure to unzip) into Octave's search path.
+	The lazy way to do this is by moving the entire downloaded folder
+	into a directory that is already part of Octave's path. On my 
+	machine this directory is:
+	C:\Octave\Octave-4.0.3\share\octave\4.0.3\m
+	To see what directories are part of Octave's search path on your machine,
+	simply run Octave, and run the command: path
+	This will print out all directories that are part of Octave's search
+	path on your machine.
+	
+3.	Download and install python 3. Any version of python 3 should work
+	fine; however, you may need to install all of the required python
+	libraries. To avoid this extra work, I recommend installing Anaconda.
+	You can download Anaconda from:
+	https://www.continuum.io/downloads
+	After downloading simply follow the installation wizard to install.
+	
+4.	Install the required python libraries. If you installed python
+	through Anaconda you will only need to install oct2py. To install
+	oct2py follow the instructions here:
+	https://pypi.python.org/pypi/oct2py
+	
+5.	Add GNU Octave to your path. For information on how to do this go
+	here:
+	http://blink1073.github.io/oct2py/source/installation.html
+	and follow the instructions under "GNU Octave Installation". This
+	step is necessary in order for oct2py to function correctly.
+	
+6. Set-up complete.
+
+=========================================================================
+3.	Using Job Hunter:
+-------------------------------------------------------------------------
+The following section outlines how to run and use the Job Hunter
+application.
+
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+				To run Job Hunter follow these steps:
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+1.	Open the command prompt/terminal.
+
+2.	Navigate so that you are running the command prompt/terminal from
+	inside of the Job Hunter directory.
+	
+3.	Type the following command into the command prompt/terminal to
+	launch Job Hunter:
+	python job_hunter.py
+
+4. Job Hunter should now be running.
+
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+					Adding New Jobs to the Library:
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+	Users are able to add new jobs to the library by selecting the
+	appropriate action and then referencing the absolute location of a
+	file (Input File) containing job descriptions.
+	
+	The program expects that the Input File contains 1 self contained
+	block of html for each job posting. Input Files can contain multiple
+	job postings. For examples of Input Files please see the files in:
+	\Job Hunter\data\input_data\archive
+	
+	Note:	The process of loading new jobs into the job library is time 
+			intensive. It takes roughly 15-60 sec to load each job into
+			the job library. There will be NO feedback from the program
+			as it loading files into the job library. Once loading is
+			complete, the program will return you to the main menu.
+			
+	Special Companies:	There are a "few special" companies that the
+						program will automatically get additional data
+						from the job description. This data includes
+						the job title, job reference number, the job
+						location, and the job posting date. When the user
+						enters a company name the program will check to see
+						if the company name entered matches one of the
+						"Special Companies". If it does, then the program
+						will run an extra function to get the extra data
+						from the job description.
+	
+	WARNING:	If a user inputs a company name that matches one of the
+				"Special Companies" the program WILL CRASH if the html of
+				the job description does not match what is expected by the
+				program. To avoid this only input the name of a "Special 
+				Company" if the job descriptions inside the file were taken
+				from the locations outlined below:
+				
+	---------------------------------------------------------------------------------------------------------
+	|Special Company Name:	|	Special Company Job Description html Source:								|
+	---------------------------------------------------------------------------------------------------------
+	|	Apple				|	jobs.apple.com/us/search?													|
+	---------------------------------------------------------------------------------------------------------
+	|	Intuitive Surgical	|	intuitive.taleo.net/careersection/2/jobsearch.ftl?lang=en					|
+	---------------------------------------------------------------------------------------------------------
+	|	Udacity				|	www.udacity.com/jobs														|
+	---------------------------------------------------------------------------------------------------------
+	|	Tesla Motors		|	chj.tbe.taleo.net/chj05/ats/careers/jobSearch.jsp?org=TESLA&cws=1			|
+	---------------------------------------------------------------------------------------------------------
+	|	Google				|	www.google.com/about/careers/search											|
+	---------------------------------------------------------------------------------------------------------
+
+	Note:	I add Special Companies on an as needed basis; however, feel free
+			to add your own Special Companies. The code for managing Special
+			Companies is located here:
+			\Job Hunter\python_scripts\job_data.py
+	
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+							Rating Jobs:
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+	When you perform this action the program will ask you how many job
+	descriptions you would like to rate. After you enter a number it
+	will display one of the job descriptions from the job library, and
+	request a rating from 1-5 for both how interesting you find the job,
+	and how qualified you feel you are to perform the job. Guidance on
+	each rating is as follows:
+	
+Interest
+	1	-	A score of 1 on interest represents a job that you would:
+				i.	very likely leave without any backup plans.
+			
+	2	-	A score of 2 on interest represents a job that you would:
+				i.	leave as soon as anything slightly better presented
+					itself
+				ii. recognize this job as a way to pay bills
+			
+	3	-	A score of 3 on interest represents a job that you would:
+				i.	accept and stay in in order to build experience
+				ii. recognize that there is up to 2 years of valuable
+					experience
+				
+	4	-	A score of 4 on interest represents a job that you would:
+				i.	almost call a dream job
+				ii.	easily see yourself fulfilled for 2-5 years
+				
+	5	-	A score of 5 on interest represents a job that you would:
+				i.	call a dream job
+				ii.	easily see yourself fulfilled for 5+ years
+	
+Qualifications
+	1	-	A score of 1 on qualifications represents a job that you:
+				i.	do not have any idea what the job description
+					refers to.
+				ii.	honestly would not be successful in this position
+				
+	2	-	A score of 2 on qualifications represents a job that you:
+				i.	feel you need a 2+ years of full time education/training
+					in order to rank the position as a 3
+				ii.	honestly would not be successful in this position
+				
+	3	-	A score of 3 on qualifications represents a job that you:
+				i.	you meet the educational requirements for, but lack 
+					a large portion of domain specific knowledge
+				ii.	feel that you would require significant support in
+					getting up to speed in this role
+				iii.have the base skills needed for this role.
+				
+	4	-	A score of 4 on qualifications represents a job that you:
+				i.	you have a large portion of the qualifications
+					required for this role either as direct experience,
+					or as a tangential transferable skill
+				ii.	feel that you would require a moderate to minimal
+					amount of support and guidance to get up to speed
+					in this role
+				
+	5	-	A score of 5 on qualifications represents a job that you:
+				i.	the role outlined in this description is one that you have
+					performed in the past, or you have had experience in
+					all areas outlined in the description.
+				ii.	you would excel in this position with almost no guidance
+				
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+						Ranking Jobs:
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+	This feature is currently unavailable. Sorry.
+
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+			Making Predictions on Jobs that Have not been Rated:
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+	In order to make predictions on un-rated job descriptions, you must
+	train the neural network. After training is completed, the program
+	will make a prediction for every job description in the library, and
+	save those predictions to the database.
+	
+	Note: 	I recommend having 100+ rated job descriptions in order for
+			the results to be accurate. The more jobs you have rated, the
+			more accurate your results will be.
+	
+	Note:	You only need to run the training step if you have: a. added
+			more new jobs to the library, or b. performed new ratings that
+			you would like to have taken into account when the program
+			makes predictions on jobs within the library.
+			
+	Note:	The training and prediction step takes 10-20 minutes. During
+			this time the program will not give you any feedback. Once it
+			is finished it will return you to the main menu.
+
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+						Resetting User Ratings:
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+	By using this function you will reset all ratings that have been made
+	on jobs within the job library.
+	
+	WARNING:	This action is not reversible. If you preform this action
+				All user input ratings will be removed.
+				
+	Note:	You will likely want to perform this action before making your
+			own ratings. I have saved my own preferences with the base
+			library for demo purposes.
+
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+							Viewing the Results:
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+	Upon performing this action, the program should open your internet
+	browser and display a chart with your results. The most recent version
+	of this chart is also automatically saved in the root directory of the
+	Job Hunter application as "job_hunt_scatter.html".
+
+=========================================================================
+4.	Potential Improvements to Job Hunter:
+-------------------------------------------------------------------------
+There are a ton of improvements I would like to eventually make to this
+application. In broad strokes here are a few of the changes I would like
+to make in the future:
+
+1.	Upgrade UI.
+2.	Run application from the Web.
+3.	Scrape job descriptions automatically from the web.
+4.	Provide more analysis on companies, jobs, individual career
+	progression, and user preferences.
+5.	Add more advanced machine learning algorithms, and upgrade the
+	current neural network.
+
+=========================================================================
+5.	Credits:
+-------------------------------------------------------------------------
+Lastly, I would like to acknowledge the Stanford's Machine Learning
+course on Coursera available here:
+(https://www.coursera.org/learn/machine-learning)
+I completed this course and was immediately able to begin applying its
+content to solving problems. In fact, the machine learning algorithm
+used in this application is a modification of two of the assignments that
+were required material for completion if the course. If you have an
+interest in learning about machine learning, I highly recommend this
+course.
+
+=========================================================================
+6.	Contact:
+-------------------------------------------------------------------------
+If you find any bugs, have any questions, or comments feel free to email
+me at:
+
+zoleitschuk@gmail.com
+
+When emailing please use the subject line "info Job Hunter" so I do not
+discard your email as spam. I will try to respond within two weeks of
+receiving your email.
+
+=========================================================================
